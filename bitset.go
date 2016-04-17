@@ -520,6 +520,12 @@ func (b *BitSet) Any() bool {
 	return !b.None()
 }
 
+// Parity returns true if there is an odd number of bits, false otherwise
+func (b *BitSet)Parity() bool {
+	panicIfNull(b)
+	return paritySliceGo(b.set) == 1
+}
+
 // IsSuperSet returns true if this is a superset of the other set
 func (b *BitSet) IsSuperSet(other *BitSet) bool {
 	for i, e := other.NextSet(0); e; i, e = other.NextSet(i + 1) {
