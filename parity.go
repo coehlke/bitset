@@ -7,7 +7,7 @@ package bitset
 
 func parity(x uint64) uint64 {
 	x = x ^ (x >> 1)
-	x = (x ^ (x >>2)) & 0x1111111111111111
+	x = (x ^ (x >> 2)) & 0x1111111111111111
 	x *=  0x1111111111111111
 	return (x >> 60) & 1
 }
