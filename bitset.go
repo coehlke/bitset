@@ -125,8 +125,10 @@ func (b *BitSet) extendSetMaybe(i uint) {
 		nsize := wordsNeeded(i + 1)
 		if b.set == nil {
 			b.set = make([]uint64, nsize)
+		} else if cap(b.set) >= nsize {
+			b.set = b.set[:nsize] // fast resize
 		} else if len(b.set) < nsize {
-			newset := make([]uint64, nsize)
+			newset := make([]uint64, nsize, 2*nsize) // increase capacity 2x
 			copy(newset, b.set)
 			b.set = newset
 		}
@@ -534,13 +536,15 @@ func (b *BitSet) Complement() (result *BitSet) {
 	return
 }
 
-// All returns true if all bits are set, false otherwise
+// All returns true if all bits are set, false otherwise. Returns true for
+// empty sets.
 func (b *BitSet) All() bool {
 	panicIfNull(b)
 	return b.Count() == b.length
 }
 
-// None returns true if no bit is set, false otherwise
+// None returns true if no bit is set, false otherwise. Retursn true for
+// empty sets.
 func (b *BitSet) None() bool {
 	panicIfNull(b)
 	if b != nil && b.set != nil {
